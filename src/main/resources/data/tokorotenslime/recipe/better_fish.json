@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    [
+      "minecraft:cod",
+      "minecraft:salmon",
+      "minecraft:tropical_fish"
+    ],
+    [
+      "minecraft:egg",
+      "minecraft:blue_egg",
+      "minecraft:brown_egg"
+    ],
+    "minecraft:wheat"
+  ],
+  "result": {
+    "id": "tokorotenslime:better_fish",
+    "count": 1
+  }
+}

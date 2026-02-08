@@ -1,0 +1,43 @@
+{
+	"schemaVersion": 1,
+	"id": "tokorotenslime",
+	"version": "${version}",
+	"name": "TokorotenSlime",
+	"description": "A core mod adding a few items and blocks, serving as the foundation for addons.",
+	"authors": [
+		"Kasara"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/tokorotenslime",
+        "issues": "https://github.com/kasaradanamo/TokorotenSlime/issues"
+	},
+	"license": [
+        "Source code: MIT",
+        "Assets: All rights reserved"
+    ],
+	"icon": "assets/tokorotenslime/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.kasara.tokorotenslime.TokorotenSlime"
+		],
+		"fabric-datagen": [
+			"net.kasara.tokorotenslime.TokorotenSlimeDataGenerator"
+		],
+		"client": [
+			"net.kasara.tokorotenslime.TokorotenSlimeClient"
+		]
+	},
+	"mixins": [
+		"tokorotenslime.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.17.2",
+		"minecraft": "~1.21.9",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "decorations",
+  "pattern": [
+    "###",
+    " X ",
+    "###"
+  ],
+  "key": {
+    "#": "minecraft:polished_deepslate_slab",
+    "X": "minecraft:polished_deepslate"
+  },
+  "result": {
+    "id": "tokorotenslime:pedestal",
+    "count": 1
+  }
+}
