@@ -23,8 +23,8 @@ public class ModItemGroups {
     private static final List<Item> EXTRA_ITEMS = new ArrayList<>();
 
     // TokorotenSlime用クリエイティブタブ
-    public static final ItemGroup TOKOROTENSLIME_Group = Registry.register(Registries.ITEM_GROUP,
-            Identifier.of(TokorotenSlime.MOD_ID, "tokorotenslime_group"),
+    public static final ItemGroup TOKOROTENSLIME_Group = Registry.register(
+            Registries.ITEM_GROUP, Identifier.of(TokorotenSlime.MOD_ID, "tokorotenslime_group"),
             FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.SLIME_ICON))
                     .displayName(Text.translatable("itemgroup.tokorotenslime.tokorotenslime_group"))
                     .entries((displayContext, entries) -> {

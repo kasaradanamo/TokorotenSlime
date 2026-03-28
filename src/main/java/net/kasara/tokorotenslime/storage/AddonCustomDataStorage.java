@@ -12,9 +12,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
  */
 public class AddonCustomDataStorage {
 
-    // インスタンス化禁止
-    private AddonCustomDataStorage() {}
-
     /**
      * 指定したアドオンIDに対応するNBTルートを取得
      *
@@ -48,4 +45,6 @@ public class AddonCustomDataStorage {
         base.put(TokorotenSlime.MOD_ID, tsRoot);
         player.setComponent(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(base));
     }
+
+    private AddonCustomDataStorage() {}
 }

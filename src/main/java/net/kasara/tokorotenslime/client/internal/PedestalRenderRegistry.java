@@ -19,9 +19,6 @@ public class PedestalRenderRegistry {
     // Item → 描画用 ItemStack へ変換処理を保持するマップ
     private static final Map<Item, UnaryOperator<ItemStack>> TRANSFORMERS = new HashMap<>();
 
-    // ユーティリティクラスのためインスタンス化を禁止
-    private PedestalRenderRegistry() {}
-
     /**
      * 指定したItemに対する描画用ItemStack変換処理を登録
      *
@@ -44,4 +41,6 @@ public class PedestalRenderRegistry {
         if (transformer == null) return original;
         return transformer.apply(original);
     }
+
+    private PedestalRenderRegistry() {}
 }

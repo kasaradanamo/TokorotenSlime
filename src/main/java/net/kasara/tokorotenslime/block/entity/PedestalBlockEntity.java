@@ -15,8 +15,6 @@ import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * PedestalBlockに対応するBlockEntity<p>
@@ -84,9 +82,6 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
     @Override
     public void setStack(int slot, ItemStack stack) {
         items.set(slot, stack);
-        if (stack.getCount() > getMaxCountPerStack()) {
-            stack.setCount(getMaxCountPerStack());
-        }
         this.markDirty();
     }
 
@@ -97,7 +92,32 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      */
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
-        return player.squaredDistanceTo(Vec3d.ofCenter(this.pos)) <= 64.0;
+        return player.squaredDistanceTo(
+                pos.getX() + 0.5,
+                pos.getY() + 0.5,
+                pos.getZ() + 0.5
+        ) <= 64.0;
+    }
+
+    /**
+     * スロットにアイテムがなく、アイテムスタックが1つの場合、true
+     */
+    @Override
+    public boolean isValid(int slot, ItemStack stack) {
+        return items.get(slot).isEmpty() && stack.getCount() == 1;
+    }
+
+    /**
+     * Maxスタックサイズを1にする
+     */
+    @Override
+    public int getMaxCountPerStack() {
+        return 1;
+    }
+
+    @Override
+    public int getMaxCount(ItemStack stack) {
+        return 1;
     }
 
     /**
@@ -143,7 +163,7 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * クライアントへの同期パケットを返す
      */
     @Override
-    public @Nullable Packet<ClientPlayPacketListener> toUpdatePacket() {
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }
 

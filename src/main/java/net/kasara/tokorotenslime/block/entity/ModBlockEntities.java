@@ -10,29 +10,17 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
-/**
- * Tokorotenslime内で使用するBlockEntityの登録クラス
- */
 public class ModBlockEntities {
 
-    /** PedestalBlock用BlockEntityType */
+    // PedestalBlock用BlockEntityType
     public static final BlockEntityType<PedestalBlockEntity> PEDESTAL_BE =
-            registerBlockEntities("pedestal_be", PedestalBlockEntity::new, ModBlocks.PEDESTAL);
+            registerBlockEntities(
+                    "pedestal_be",
+                    PedestalBlockEntity::new,
+                    ModBlocks.PEDESTAL
+            );
 
-    /**
-     * BlockEntityTypeを登録するユーティリティ
-     *
-     * @param name 登録名
-     * @param factory BlockEntityを生成するファクトリ
-     * @param blocks BlockEntityTypeに紐づくBlock
-     * @param <T> BlockEntityの型
-     * @return 登録されたBlockEntityType
-     */
-    private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntities(
-            String name,
-            FabricBlockEntityTypeBuilder.Factory<T> factory,
-            Block... blocks
-    ) {
+    private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntities(String name, FabricBlockEntityTypeBuilder.Factory<T> factory, Block... blocks) {
         return Registry.register(
                 Registries.BLOCK_ENTITY_TYPE,
                 Identifier.of(TokorotenSlime.MOD_ID, name),

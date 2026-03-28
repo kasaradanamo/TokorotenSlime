@@ -3,8 +3,8 @@ package net.kasara.tokorotenslime.api;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kasara.tokorotenslime.TokorotenSlime;
-import net.kasara.tokorotenslime.client.option.ModKeyBindings;
 import net.kasara.tokorotenslime.client.internal.PedestalRenderRegistry;
+import net.kasara.tokorotenslime.client.option.ModKeyBindings;
 import net.kasara.tokorotenslime.item.ModItemGroups;
 import net.kasara.tokorotenslime.storage.AddonCustomDataStorage;
 import net.minecraft.client.option.KeyBinding;
@@ -21,13 +21,8 @@ import java.util.function.UnaryOperator;
  */
 public final class TokorotenSlimeAPI {
 
-    // インスタンス化禁止
-    private TokorotenSlimeAPI() {
-    }
-
     /**
-     * MOD_ID を返す
-     * @return TokorotenslimeのMOD_ID
+     * TokorotenslimeのMOD_IDを返す
      */
     public static String getModId() {
         return TokorotenSlime.MOD_ID;
@@ -35,7 +30,7 @@ public final class TokorotenSlimeAPI {
 
     /**
      * 指定したアイテムをTokorotenslimeのアイテムグループに追加
-     * @param item 追加する Item インスタンス
+     * @param item 追加するItem
      */
     public static void addItemToTab(Item item) {
         ModItemGroups.addExtraItem(item);
@@ -45,7 +40,7 @@ public final class TokorotenSlimeAPI {
      * TokorotenSlime用のキーバインドカテゴリを取得
      * @return KeyBinding.Category
      */
-    public static KeyBinding.Category getKeybindingCategory() {
+    public static KeyBinding.Category getKeyBindingCategory() {
         return ModKeyBindings.TOKOROTENSLIME_CATEGORY;
     }
 
@@ -81,4 +76,6 @@ public final class TokorotenSlimeAPI {
     public static void registerPedestalRenderHandler(Item item, UnaryOperator<ItemStack> transformer) {
         PedestalRenderRegistry.register(item, transformer);
     }
+
+    private TokorotenSlimeAPI() {}
 }
