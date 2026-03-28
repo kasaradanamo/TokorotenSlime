@@ -1,21 +1,21 @@
 package net.kasara.tokorotenslime.client.render.block.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kasara.tokorotenslime.block.entity.PedestalBlockEntity;
-import net.kasara.tokorotenslime.client.internal.PedestalRenderRegistry;
 import net.kasara.tokorotenslime.client.render.block.entity.state.PedestalRenderState;
-import net.minecraft.client.item.ItemModelManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.command.ModelCommandRenderer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.kasara.tokorotenslime.client.internal.PedestalRenderRegistry;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -24,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
 @Environment(EnvType.CLIENT)
 public class PedestalBlockEntityRenderer implements BlockEntityRenderer<PedestalBlockEntity, PedestalRenderState> {
 
-    private final ItemModelManager itemModelManager;
+    private final ItemModelResolver itemModelResolver;
 
-    public PedestalBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
-        this.itemModelManager = context.itemModelManager();
+    public PedestalBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+        this.itemModelResolver = context.itemModelResolver();
     }
 
     @Override
@@ -39,22 +39,22 @@ public class PedestalBlockEntityRenderer implements BlockEntityRenderer<Pedestal
      * 描画情報の更新
      */
     @Override
-    public void updateRenderState(PedestalBlockEntity blockEntity, PedestalRenderState state, float tickProgress, Vec3d cameraPos, ModelCommandRenderer.@Nullable CrumblingOverlayCommand crumblingOverlay) {
-        BlockEntityRenderer.super.updateRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+    public void extractRenderState(PedestalBlockEntity blockEntity, PedestalRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
 
         // 描画用ItemStackを取得
-        state.stack = PedestalRenderRegistry.apply(blockEntity.getStack(0));
+        state.stack = PedestalRenderRegistry.apply(blockEntity.getItem(0));
 
         state.rotation = blockEntity.getRenderingRotation();
-        state.world = blockEntity.getWorld();
+        state.level = blockEntity.getLevel();
 
-        this.itemModelManager.clearAndUpdate(
-                state.itemRenderState,
+        itemModelResolver.updateForTopItem(
+                state.renderState,
                 state.stack,
                 ItemDisplayContext.GUI,
-                state.world,
+                state.level,
                 null,
-                (int) blockEntity.getPos().asLong()
+                (int) blockEntity.getBlockPos().asLong()
         );
     }
 
@@ -62,23 +62,23 @@ public class PedestalBlockEntityRenderer implements BlockEntityRenderer<Pedestal
      * 実際に描画する
      */
     @Override
-    public void render(PedestalRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+    public void submit(PedestalRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
         if (state.stack.isEmpty()) return;
 
-        matrices.push();
+        poseStack.pushPose();
 
-        matrices.translate(0.5f, 1.5f, 0.5f);
-        matrices.scale(0.6f, 0.6f, 0.6f);
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(state.rotation));
+        poseStack.translate(0.5f, 1.5f, 0.5f);
+        poseStack.scale(0.6f, 0.6f, 0.6f);
+        poseStack.mulPose(Axis.YP.rotationDegrees(state.rotation));
 
-        state.itemRenderState.render(
-                matrices,
-                queue,
-                state.lightmapCoordinates,
-                OverlayTexture.DEFAULT_UV,
+        state.renderState.submit(
+                poseStack,
+                submitNodeCollector,
+                state.lightCoords,
+                OverlayTexture.NO_OVERLAY,
                 0
         );
 
-        matrices.pop();
+        poseStack.popPose();
     }
 }

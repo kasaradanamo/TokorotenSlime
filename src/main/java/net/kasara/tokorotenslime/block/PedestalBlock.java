@@ -2,37 +2,37 @@ package net.kasara.tokorotenslime.block;
 
 import com.mojang.serialization.MapCodec;
 import net.kasara.tokorotenslime.block.entity.PedestalBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * 台座ブロック
  */
-public class PedestalBlock  extends BlockWithEntity {
+public class PedestalBlock extends BaseEntityBlock {
 
-    public static final MapCodec<PedestalBlock> CODEC = PedestalBlock.createCodec(PedestalBlock::new);
+    public static final MapCodec<PedestalBlock> CODEC = simpleCodec(PedestalBlock::new);
 
-    public PedestalBlock(Settings settings) {
-        super(settings);
+    public PedestalBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PedestalBlockEntity(pos, state);
     }
 
@@ -40,35 +40,35 @@ public class PedestalBlock  extends BlockWithEntity {
      * プレイヤーがブロックを右クリックしたときの処理
      */
     @Override
-    protected ActionResult onUseWithItem(ItemStack itemStack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        // PedestalBlockEntityかどうか確認
-        if (world.getBlockEntity(pos) instanceof PedestalBlockEntity pedestal) {
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        //PedestalBlockEntityかどうか確認
+        if (level.getBlockEntity(pos) instanceof PedestalBlockEntity pedestal) {
 
-            ItemStack placed = pedestal.getStack(0);   // 台座上のアイテム
+            ItemStack placed = pedestal.getItem(0);   // 台座上のアイテム
 
             // 1. 台座が空で、プレイヤーがアイテムを持ってる場合
             if (pedestal.isEmpty() && !itemStack.isEmpty()) {
-                pedestal.setStack(0, itemStack.copyWithCount(1));   // 台座に1個置く
-                itemStack.decrement(1);                          // プレイヤーの手から1個減らす
-                world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.5f, 2f);
+                pedestal.setItem(0, itemStack.copyWithCount(1));   // 台座に1個置く
+                itemStack.shrink(1);                          // プレイヤーの手から1個減らす
+                level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.5f, 2f);
             }
             // 2. 台座にアイテムがあり、プレイヤーがスニークしていない場合
-            else if (!placed.isEmpty() && !player.isSneaking()) {
+            else if (!placed.isEmpty() && !player.isShiftKeyDown()) {
                 // メインハンドが空の場合
                 if (itemStack.isEmpty()) {
-                    player.setStackInHand(hand, placed);
-                    pedestal.clear();
-                    world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.5f, 1f);
+                    player.setItemInHand(hand, placed);
+                    pedestal.clearContent();
+                    level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.5f, 1f);
                 }
                 // 手の中のアイテムと台座のアイテムが同じで、スタックが上限に達していない場合
-                else if (ItemStack.areItemsEqual(itemStack, placed) && itemStack.getCount() < itemStack.getMaxCount()) {
-                    itemStack.increment(1);
-                    pedestal.clear();
-                    world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.5f, 1f);
+                else if (ItemStack.isSameItemSameComponents(itemStack, placed) && itemStack.getCount() < itemStack.getMaxStackSize()) {
+                    itemStack.grow(1);
+                    pedestal.clearContent();
+                    level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.5f, 1f);
                 }
             }
         }
         // 常に成功を返す
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

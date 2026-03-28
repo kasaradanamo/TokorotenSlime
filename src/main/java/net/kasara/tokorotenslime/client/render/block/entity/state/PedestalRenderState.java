@@ -2,10 +2,10 @@ package net.kasara.tokorotenslime.client.render.block.entity.state;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
-import net.minecraft.client.render.item.ItemRenderState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 /**
  * PedestalBlockEntityの描画状態を保持するオブジェクト
@@ -15,8 +15,8 @@ public class PedestalRenderState extends BlockEntityRenderState {
 
     public ItemStack stack = ItemStack.EMPTY;
     public float rotation;
-    public World world;
+    public Level level;
 
     // アイテム描画用の状態オブジェクト
-    public ItemRenderState itemRenderState = new ItemRenderState();
+    public final ItemStackRenderState renderState = new ItemStackRenderState();
 }

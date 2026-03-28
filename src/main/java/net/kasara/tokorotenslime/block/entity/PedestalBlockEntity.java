@@ -1,29 +1,29 @@
 package net.kasara.tokorotenslime.block.entity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 /**
- * PedestalBlockに対応するBlockEntity<p>
+ * PedestalBlockに対応するBlockEntity
  * 1スロットのインベントリを持ち、設置アイテムを管理。クライアントへの同期・回転アニメーションも行う
  */
-public class PedestalBlockEntity extends BlockEntity implements Inventory {
+public class PedestalBlockEntity extends BlockEntity implements Container {
 
     // 台座のアイテム用スロット(1個のみ)
-    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
 
     // アイテムの回転角度（レンダリング用）
     private float rotation = 0;
@@ -36,7 +36,7 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * Inventoryのサイズを返す
      */
     @Override
-    public int size() {
+    public int getContainerSize() {
         return items.size();
     }
 
@@ -52,7 +52,7 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * 指定スロットのアイテムを取得
      */
     @Override
-    public ItemStack getStack(int slot) {
+    public ItemStack getItem(int slot) {
         return items.get(slot);
     }
 
@@ -60,9 +60,9 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * 指定スロットから指定数だけ取り出す
      */
     @Override
-    public ItemStack removeStack(int slot, int amount) {
-        ItemStack result = Inventories.splitStack(items, slot, amount);
-        this.markDirty();
+    public ItemStack removeItem(int slot, int amount) {
+        ItemStack result = ContainerHelper.removeItem(items, slot, amount);
+        this.setChanged();
         return result;
     }
 
@@ -70,9 +70,9 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * 指定スロットの全スタックを取り出す
      */
     @Override
-    public ItemStack removeStack(int slot) {
-        ItemStack result = Inventories.removeStack(items, slot);
-        this.markDirty();
+    public ItemStack removeItemNoUpdate(int slot) {
+        ItemStack result = ContainerHelper.takeItem(items, slot);
+        this.setChanged();
         return result;
     }
 
@@ -80,9 +80,9 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * 指定スロットにアイテムをセット
      */
     @Override
-    public void setStack(int slot, ItemStack stack) {
+    public void setItem(int slot, ItemStack stack) {
         items.set(slot, stack);
-        this.markDirty();
+        this.setChanged();
     }
 
     /**
@@ -91,11 +91,11 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * @return ブロックから8ブロック以内ならtrue
      */
     @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        return player.squaredDistanceTo(
-                pos.getX() + 0.5,
-                pos.getY() + 0.5,
-                pos.getZ() + 0.5
+    public boolean stillValid(Player player) {
+        return player.distanceToSqr(
+                worldPosition.getX() + 0.5,
+                worldPosition.getY() + 0.5,
+                worldPosition.getZ() + 0.5
         ) <= 64.0;
     }
 
@@ -103,20 +103,20 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * スロットにアイテムがなく、アイテムスタックが1つの場合、true
      */
     @Override
-    public boolean isValid(int slot, ItemStack stack) {
-        return items.get(slot).isEmpty() && stack.getCount() == 1;
+    public boolean canPlaceItem(int slot, ItemStack itemStack) {
+        return items.get(slot).isEmpty() && itemStack.getCount() == 1;
     }
 
     /**
      * Maxスタックサイズを1にする
      */
     @Override
-    public int getMaxCountPerStack() {
+    public int getMaxStackSize() {
         return 1;
     }
 
     @Override
-    public int getMaxCount(ItemStack stack) {
+    public int getMaxStackSize(ItemStack itemStack) {
         return 1;
     }
 
@@ -124,38 +124,38 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * Inventoryをクリアする
      */
     @Override
-    public void clear() {
+    public void clearContent() {
         items.clear();
-        this.markDirty();
+        this.setChanged();
     }
 
     /**
      * NBTに保存するデータを書き込む
      */
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
-        Inventories.writeData(view, items);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ContainerHelper.saveAllItems(output, items);
     }
 
     /**
      * NBTからデータを読み込む
      */
     @Override
-    protected void readData(ReadView view) {
+    protected void loadAdditional(ValueInput input) {
         items.clear();
-        super.readData(view);
-        Inventories.readData(view, items);
+        super.loadAdditional(input);
+        ContainerHelper.loadAllItems(input, items);
     }
 
     /**
-     * ブロックエンティティの状態を更新したときに呼ばれる
+     * ブロックエンティティの状態を更新した時に呼ばれる
      */
     @Override
-    public void markDirty() {
-        super.markDirty();
-        if (this.world != null && !world.isClient()) {
-            this.world.updateListeners(pos, getCachedState(), getCachedState(), 3);
+    public void setChanged() {
+        super.setChanged();
+        if (this.level != null && !level.isClientSide()) {
+            this.level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
     }
 
@@ -163,16 +163,16 @@ public class PedestalBlockEntity extends BlockEntity implements Inventory {
      * クライアントへの同期パケットを返す
      */
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     /**
      * チャンクデータ送信用の初期NBTを返す
      */
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registries) {
-        return createNbt(registries);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 
     /**
