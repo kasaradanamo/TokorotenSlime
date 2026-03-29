@@ -3,16 +3,15 @@ package net.kasara.tokorotenslime.api;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kasara.tokorotenslime.TokorotenSlime;
-import net.kasara.tokorotenslime.client.option.ModKeyMappings;
 import net.kasara.tokorotenslime.client.internal.PedestalRenderRegistry;
-import net.kasara.tokorotenslime.item.ModCreativeModeTabs;
+import net.kasara.tokorotenslime.item.ModItemGroups;
 import net.kasara.tokorotenslime.storage.AddonCustomDataStorage;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.function.UnaryOperator;
 
@@ -33,15 +32,15 @@ public final class TokorotenSlimeAPI {
      * @param item 追加するItem
      */
     public static void addItemToTab(Item item) {
-        ModCreativeModeTabs.addExtraItem(item);
+        ModItemGroups.addExtraItem(item);
     }
 
     /**
-     * TokorotenSlime用のキーマッピングカテゴリを取得
-     * @return KeyMapping.Category
+     * TokorotenSlime用のキーバインドカテゴリを取得
+     * @return KeyBinding.Category
      */
-    public static KeyMapping.Category getKeyMappingCategory() {
-        return ModKeyMappings.TOKOROTENSLIME_CATEGORY;
+    public static String getKeyBindingCategory() {
+        return "key.category.tokorotenslime.main";
     }
 
     /**
@@ -51,7 +50,7 @@ public final class TokorotenSlimeAPI {
      * @param addonId アドオン識別子(アドオンのMOD_ID)
      * @return 指定アドオン用のNbtCompound(存在しない場合は空)
      */
-    public static CompoundTag getAddonData(Player player, String addonId) {
+    public static NbtCompound getAddonData(PlayerEntity player, String addonId) {
         return AddonCustomDataStorage.getAddonRoot(player, addonId);
     }
 
@@ -62,7 +61,7 @@ public final class TokorotenSlimeAPI {
      * @param addonId アドオン識別子(アドオンのMOD_ID)
      * @param data 書き込むNbtCompound
      */
-    public static void writeAddonData(ServerPlayer player, String addonId, CompoundTag data) {
+    public static void writeAddonData(ServerPlayerEntity player, String addonId, NbtCompound data) {
         AddonCustomDataStorage.writeAddonRoot(player, addonId, data);
     }
 

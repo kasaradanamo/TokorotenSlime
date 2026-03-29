@@ -1,47 +1,47 @@
 package net.kasara.tokorotenslime.block;
 
 import net.kasara.tokorotenslime.TokorotenSlime;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.MapColor;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
 
 public class ModBlocks {
 
     // PedestalBlockのインスタンス。設置アイテム用の台座ブロック
-    public static final Block PEDESTAL = registerBlock("pedestal", props -> new PedestalBlock(props
-            .mapColor(MapColor.STONE)                       // 地図に表示される色
-            .strength(2f, 6.0f)    // ブロック耐久力・爆発耐性
-            .sound(SoundType.POLISHED_DEEPSLATE)            // サウンドグループ
-            .noOcclusion()                                  // 光を透過する
-            .requiresCorrectToolForDrops()                  // 適切なツールでないと破壊できない
+    public static final Block PEDESTAL = registerBlock("pedestal", properties -> new PedestalBlock(properties
+            .mapColor(MapColor.STONE_GRAY)               // 地図に表示される色
+            .strength(2f, 6.0f)         // ブロック耐久力・爆発耐性
+            .sounds(BlockSoundGroup.POLISHED_DEEPSLATE) // サウンドグループ
+            .nonOpaque()                                // 光を透過する
+            .requiresTool()                             // 適切なツールでないと破壊できない
     ));
 
-    private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory) {
-        ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(TokorotenSlime.MOD_ID, name));
-        Block block = factory.apply(BlockBehaviour.Properties.of().setId(key));
+    private static Block registerBlock(String name, Function<AbstractBlock.Settings, Block> function) {
+        // ブロックのインスタンス生成
+        Block toRegister = function.apply(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK,
+                Identifier.of(TokorotenSlime.MOD_ID, name))));
         // BlockItem を登録
-        registerBlockItem(key, block);
-        // ブロック本体をレジストリに登録
-        return Registry.register(BuiltInRegistries.BLOCK, key, block);
+        registerBlockItem(name, toRegister);
+
+        // ブロック本体を登録
+        return Registry.register(Registries.BLOCK, Identifier.of(TokorotenSlime.MOD_ID, name), toRegister);
     }
 
-    private static void registerBlockItem(ResourceKey<Block> blockKey, Block block) {
-        ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, blockKey.identifier());
-        Registry.register(
-                BuiltInRegistries.ITEM,
-                itemKey,
-                new BlockItem(block, new Item.Properties().setId(itemKey).useBlockDescriptionPrefix())
-        );
+    private static void registerBlockItem(String name, Block block) {
+        Registry.register(Registries.ITEM, Identifier.of(TokorotenSlime.MOD_ID, name),
+                new BlockItem(block, new Item.Settings()
+                        .useBlockPrefixedTranslationKey()   // ブロック名を自動翻訳キーに利用
+                        .registryKey(RegistryKey.of(RegistryKeys.ITEM, Identifier.of(TokorotenSlime.MOD_ID, name)))));
     }
 
     /**

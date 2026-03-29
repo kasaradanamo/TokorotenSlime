@@ -1,84 +1,53 @@
 package net.kasara.tokorotenslime.client.render.block.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasara.tokorotenslime.block.entity.PedestalBlockEntity;
-import net.kasara.tokorotenslime.client.render.block.entity.state.PedestalRenderState;
 import net.kasara.tokorotenslime.client.internal.PedestalRenderRegistry;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.item.ItemModelResolver;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemDisplayContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * PedestalBlockEntity上に置かれたアイテムの描画をする
  */
-@Environment(EnvType.CLIENT)
-public class PedestalBlockEntityRenderer implements BlockEntityRenderer<PedestalBlockEntity, PedestalRenderState> {
+public class PedestalBlockEntityRenderer implements BlockEntityRenderer<PedestalBlockEntity> {
 
-    private final ItemModelResolver itemModelResolver;
+    private final ItemRenderer itemRenderer;
 
-    public PedestalBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
-        this.itemModelResolver = context.itemModelResolver();
-    }
-
-    @Override
-    public PedestalRenderState createRenderState() {
-        return new PedestalRenderState();
+    public PedestalBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
+        this.itemRenderer = context.getItemRenderer();
     }
 
     /**
-     * 描画情報の更新
+     * レンダリング処理
      */
     @Override
-    public void extractRenderState(PedestalBlockEntity blockEntity, PedestalRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
-        BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+    public void render(PedestalBlockEntity blockEntity, float tickProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
+        ItemStack stack = PedestalRenderRegistry.apply(blockEntity.getStack(0));
+        if (stack.isEmpty()) return;
 
-        // 描画用ItemStackを取得
-        state.stack = PedestalRenderRegistry.apply(blockEntity.getItem(0));
+        matrices.push();
 
-        state.rotation = blockEntity.getRenderingRotation();
-        state.level = blockEntity.getLevel();
+        matrices.translate(0.5f, 1.5f, 0.5f);
+        matrices.scale(0.6f, 0.6f, 0.6f);
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(blockEntity.getRenderingRotation()));
 
-        itemModelResolver.updateForTopItem(
-                state.renderState,
-                state.stack,
+        this.itemRenderer.renderItem(
+                stack,
                 ItemDisplayContext.GUI,
-                state.level,
-                null,
-                (int) blockEntity.getBlockPos().asLong()
-        );
-    }
-
-    /**
-     * 実際に描画する
-     */
-    @Override
-    public void submit(PedestalRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
-        if (state.stack.isEmpty()) return;
-
-        poseStack.pushPose();
-
-        poseStack.translate(0.5f, 1.5f, 0.5f);
-        poseStack.scale(0.6f, 0.6f, 0.6f);
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.rotation));
-
-        state.renderState.submit(
-                poseStack,
-                submitNodeCollector,
-                state.lightCoords,
-                OverlayTexture.NO_OVERLAY,
-                0
+                light,
+                overlay,
+                matrices,
+                vertexConsumers,
+                blockEntity.getWorld(),
+                (int) blockEntity.getPos().asLong()
         );
 
-        poseStack.popPose();
+        matrices.pop();
     }
 }

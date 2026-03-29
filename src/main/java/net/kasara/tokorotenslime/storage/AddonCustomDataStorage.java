@@ -1,11 +1,11 @@
 package net.kasara.tokorotenslime.storage;
 
 import net.kasara.tokorotenslime.TokorotenSlime;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 /**
  * TokorotenSlime配下にアドオン用のカスタムデータを保存・取得するための内部ユーティリティ
@@ -19,11 +19,11 @@ public class AddonCustomDataStorage {
      * @param addonId アドオン識別子(アドオンのMOD_ID)
      * @return アドオン用NbtCompound(存在しない場合は空)
      */
-    public static CompoundTag getAddonRoot(Player player, String addonId) {
-        CustomData comp = player.get(DataComponents.CUSTOM_DATA);
-        CompoundTag base = comp != null ? comp.copyTag() : new CompoundTag();
-        CompoundTag tsRoot = base.getCompound(TokorotenSlime.MOD_ID).orElse(new CompoundTag());
-        return tsRoot.getCompound(addonId).orElse(new CompoundTag());
+    public static NbtCompound getAddonRoot(PlayerEntity player, String addonId) {
+        NbtComponent comp = player.get(DataComponentTypes.CUSTOM_DATA);
+        NbtCompound base = comp != null ? comp.copyNbt() : new NbtCompound();
+        NbtCompound tsRoot = base.getCompound(TokorotenSlime.MOD_ID).orElse(new NbtCompound());
+        return tsRoot.getCompound(addonId).orElse(new NbtCompound());
     }
 
     /**
@@ -33,17 +33,17 @@ public class AddonCustomDataStorage {
      * @param addonId アドオン識別子(アドオンのMOD_ID)
      * @param addonRoot 書き込むアドオン用NbtCompound
      */
-    public static void writeAddonRoot(ServerPlayer player, String addonId, CompoundTag addonRoot) {
-        CustomData comp = player.get(DataComponents.CUSTOM_DATA);
-        CompoundTag base = comp != null ? comp.copyTag() : new CompoundTag();
-        CompoundTag tsRoot = base.getCompound(TokorotenSlime.MOD_ID).orElse(new CompoundTag());
+    public static void writeAddonRoot(ServerPlayerEntity player, String addonId, NbtCompound addonRoot) {
+        NbtComponent comp = player.get(DataComponentTypes.CUSTOM_DATA);
+        NbtCompound base = comp != null ? comp.copyNbt() : new NbtCompound();
+        NbtCompound tsRoot = base.getCompound(TokorotenSlime.MOD_ID).orElse(new NbtCompound());
 
         // 指定アドオンのデータのみを上書き
         tsRoot.put(addonId, addonRoot);
 
         // TokorotenSlime配下をbaseに戻して再設定
         base.put(TokorotenSlime.MOD_ID, tsRoot);
-        player.setComponent(DataComponents.CUSTOM_DATA, CustomData.of(base));
+        player.setComponent(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(base));
     }
 
     private AddonCustomDataStorage() {}

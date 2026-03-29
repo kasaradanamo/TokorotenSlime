@@ -9,12 +9,12 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/tokorotenslime",
-        "issues": "https://github.com/kasaradanamo/TokorotenSlime/issues"
+		"issues": "https://github.com/kasaradanamo/TokorotenSlime/issues"
 	},
 	"license": [
-        "Source code: MIT",
-        "Assets: All rights reserved"
-    ],
+		"Source code: MIT",
+		"Assets: All rights reserved"
+	],
 	"icon": "assets/tokorotenslime/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -32,9 +32,9 @@
 		"tokorotenslime.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.18.4",
-		"minecraft": "~26.1-",
-		"java": ">=25",
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.8",
+		"java": ">=21",
 		"fabric-api": "*"
 	}
 }
