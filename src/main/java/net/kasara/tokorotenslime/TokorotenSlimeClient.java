@@ -6,8 +6,18 @@ import net.kasara.tokorotenslime.client.render.block.entity.PedestalBlockEntityR
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 public class TokorotenSlimeClient implements ClientModInitializer {
+
     @Override
     public void onInitializeClient() {
-        BlockEntityRenderers.register(ModBlockEntities.PEDESTAL_BE, PedestalBlockEntityRenderer::new);  // 台座の描画
+        // レンダリング登録
+        registerRenderers();
+    }
+
+    private void registerRenderers() {
+        // 台座の描画
+        BlockEntityRenderers.register(ModBlockEntities.PEDESTAL_BE, PedestalBlockEntityRenderer::new);
+
+        // 登録完了ログを出力
+        TokorotenSlime.LOGGER.info("Registering Mod Renderers for "+ TokorotenSlime.MOD_ID);
     }
 }

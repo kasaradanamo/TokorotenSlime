@@ -13,10 +13,12 @@ import java.util.function.Function;
 public class ModItems {
 
     // アジフライ(食べ物アイテム)
-    public static final Item AJIFURAI = registerItem("ajifurai", props -> new Item(props.food(ModFoods.AJIFURAI)));
+    public static final Item AJIFURAI =
+            registerItem("ajifurai", props -> new Item(props.food(ModFoods.AJIFURAI)));
 
     // バッター液付き魚(食べ物アイテム)
-    public static final Item BETTER_FISH = registerItem("better_fish", props -> new Item(props.food(ModFoods.BETTER_FISH)));
+    public static final Item BETTER_FISH =
+            registerItem("better_fish", props -> new Item(props.food(ModFoods.BETTER_FISH)));
 
     // 単なるアイコン用のアイテム(GUIやシンボルに利用)
     public static final Item SLIME_ICON = registerItem("slime_icon", Item::new);
@@ -33,7 +35,7 @@ public class ModItems {
     /**
      * ModItemsの登録処理を呼び出す
      */
-    public static void registerModItems() {
+    public static void register() {
         TokorotenSlime.LOGGER.info("Registering Mod Items for " + TokorotenSlime.MOD_ID);
     }
 }

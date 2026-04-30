@@ -10,7 +10,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 
 import java.util.function.Function;
@@ -18,18 +17,19 @@ import java.util.function.Function;
 public class ModBlocks {
 
     // PedestalBlockのインスタンス。設置アイテム用の台座ブロック
-    public static final Block PEDESTAL = registerBlock("pedestal", props -> new PedestalBlock(props
-            .mapColor(MapColor.STONE)                       // 地図に表示される色
-            .strength(2f, 6.0f)    // ブロック耐久力・爆発耐性
-            .sound(SoundType.POLISHED_DEEPSLATE)            // サウンドグループ
-            .noOcclusion()                                  // 光を透過する
-            .requiresCorrectToolForDrops()                  // 適切なツールでないと破壊できない
+    public static final Block PEDESTAL =
+            registerBlock("pedestal", props -> new PedestalBlock(props
+                    .mapColor(MapColor.STONE)                       // 地図に表示される色
+                    .strength(2f, 6.0f)    // ブロック耐久力・爆発耐性
+                    .sound(SoundType.POLISHED_DEEPSLATE)            // サウンドグループ
+                    .noOcclusion()                                  // 光を透過する
+                    .requiresCorrectToolForDrops()                  // 適切なツールでないと破壊できない
     ));
 
-    private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory) {
+    private static Block registerBlock(String name, Function<Block.Properties, Block> factory) {
         ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(TokorotenSlime.MOD_ID, name));
-        Block block = factory.apply(BlockBehaviour.Properties.of().setId(key));
-        // BlockItem を登録
+        Block block = factory.apply(Block.Properties.of().setId(key));
+        // BlockItemを登録
         registerBlockItem(key, block);
         // ブロック本体をレジストリに登録
         return Registry.register(BuiltInRegistries.BLOCK, key, block);
@@ -47,7 +47,7 @@ public class ModBlocks {
     /**
      * ModBlocksの登録処理を呼び出す
      */
-    public static void registerBlocks() {
-        TokorotenSlime.LOGGER.info("Registering Blocks for " + TokorotenSlime.MOD_ID);
+    public static void register() {
+        TokorotenSlime.LOGGER.info("Registering Mod Blocks for " + TokorotenSlime.MOD_ID);
     }
 }

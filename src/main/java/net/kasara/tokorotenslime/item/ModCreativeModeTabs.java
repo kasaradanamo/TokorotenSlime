@@ -10,7 +10,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,39 +20,40 @@ import java.util.List;
 public class ModCreativeModeTabs {
 
     // アドオンから追加されるアイテムを一時的に保存するリスト
-    private static final List<Item> EXTRA_ITEMS = new ArrayList<>();
+    private static final List<Item> TS_TAB_ITEMS = new ArrayList<>();
 
     // TokorotenSlime用クリエイティブタブ
-    public static final CreativeModeTab TOKOROTENSLIME = Registry.register(
-            BuiltInRegistries.CREATIVE_MODE_TAB,
-            ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(TokorotenSlime.MOD_ID, "tokorotenslime_group")),
-            CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
-                    .icon(() -> new ItemStack(ModItems.SLIME_ICON))
-                    .title(Component.translatable("itemgroup.tokorotenslime.tokorotenslime_group"))
-                    .displayItems((parameters, entries) -> {
+    public static final CreativeModeTab TOKOROTENSLIME_TAB =
+            Registry.register(
+                    BuiltInRegistries.CREATIVE_MODE_TAB,
+                    ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(TokorotenSlime.MOD_ID, "tokorotenslime_tab")),
+                    CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
+                            .icon(ModItems.SLIME_ICON::getDefaultInstance)
+                            .title(Component.translatable("creativetab.tokorotenslime.tokorotenslime_tab"))
+                            .displayItems((itemDisplayParameters, output) -> {
 
-                        // このタブに表示するアイテム一覧を追加
-                        entries.accept(ModItems.AJIFURAI);
-                        entries.accept(ModItems.BETTER_FISH);
-                        entries.accept(ModBlocks.PEDESTAL);
+                                // このタブに表示するアイテムを追加
+                                output.accept(ModItems.AJIFURAI);
+                                output.accept(ModItems.BETTER_FISH);
+                                output.accept(ModBlocks.PEDESTAL);
 
-                        // アドオン追加分
-                        EXTRA_ITEMS.forEach(entries::accept);
-                    })
-                    .build()
+                                // アドオン追加分
+                                TS_TAB_ITEMS.forEach(output::accept);
+                            })
+                            .build()
     );
 
     /**
-     * ModItemGroupsの登録処理を呼び出す
+     * ModCreativeModeTabsの登録処理を呼び出す
      */
-    public static void registerItemGroups() {
-        TokorotenSlime.LOGGER.info(("Registering Item Groups for " + TokorotenSlime.MOD_ID));
+    public static void register() {
+        TokorotenSlime.LOGGER.info(("Registering Mod Creative Mode Tab for " + TokorotenSlime.MOD_ID));
     }
 
     /**
      * APIから呼ばれれるメソッド
      */
-    public static void addExtraItem(Item item) {
-        EXTRA_ITEMS.add(item);
+    public static void addItemList(Item item) {
+        TS_TAB_ITEMS.add(item);
     }
 }

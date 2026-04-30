@@ -9,22 +9,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TokorotenSlime implements ModInitializer {
+
     public static final String MOD_ID = "tokorotenslime";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override
     public void onInitialize() {
         // アイテム登録
-        ModItems.registerModItems();
+        ModItems.register();
 
         // ブロック登録
-        ModBlocks.registerBlocks();
+        ModBlocks.register();
 
         // 台座ブロックエンティティ登録
-        ModBlockEntities.registerModBlockEntities();
+        ModBlockEntities.register();
 
-        // アイテムグループ登録
-        ModCreativeModeTabs.registerItemGroups();
-
+        // クリエイティブタブ登録
+        ModCreativeModeTabs.register();
     }
 }

@@ -31,7 +31,7 @@ public class ModBlockEntities {
     /**
      * ModBlockEntitiesの登録処理を呼び出す
      */
-    public static void registerModBlockEntities() {
-        TokorotenSlime.LOGGER.info("Registering Block Entities for " + TokorotenSlime.MOD_ID);
+    public static void register() {
+        TokorotenSlime.LOGGER.info("Registering Mod Block Entities for " + TokorotenSlime.MOD_ID);
     }
 }

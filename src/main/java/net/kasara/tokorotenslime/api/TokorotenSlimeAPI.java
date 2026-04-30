@@ -1,12 +1,10 @@
 package net.kasara.tokorotenslime.api;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasara.tokorotenslime.TokorotenSlime;
 import net.kasara.tokorotenslime.client.option.ModKeyMappings;
-import net.kasara.tokorotenslime.client.internal.PedestalRenderRegistry;
+import net.kasara.tokorotenslime.client.render.block.entity.internal.PedestalRenderRegistry;
 import net.kasara.tokorotenslime.item.ModCreativeModeTabs;
-import net.kasara.tokorotenslime.storage.AddonCustomDataStorage;
+import net.kasara.tokorotenslime.component.player.AddonCustomDataAccess;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,19 +27,11 @@ public final class TokorotenSlimeAPI {
     }
 
     /**
-     * 指定したアイテムをTokorotenslimeのアイテムグループに追加
+     * 指定したアイテムをTokorotenslimeのクリエイティブタブに追加
      * @param item 追加するItem
      */
     public static void addItemToTab(Item item) {
-        ModCreativeModeTabs.addExtraItem(item);
-    }
-
-    /**
-     * TokorotenSlime用のキーマッピングカテゴリを取得
-     * @return KeyMapping.Category
-     */
-    public static KeyMapping.Category getKeyMappingCategory() {
-        return ModKeyMappings.TOKOROTENSLIME_CATEGORY;
+        ModCreativeModeTabs.addItemList(item);
     }
 
     /**
@@ -52,7 +42,7 @@ public final class TokorotenSlimeAPI {
      * @return 指定アドオン用のNbtCompound(存在しない場合は空)
      */
     public static CompoundTag getAddonData(Player player, String addonId) {
-        return AddonCustomDataStorage.getAddonRoot(player, addonId);
+        return AddonCustomDataAccess.getAddonRoot(player, addonId);
     }
 
     /**
@@ -63,16 +53,21 @@ public final class TokorotenSlimeAPI {
      * @param data 書き込むNbtCompound
      */
     public static void writeAddonData(ServerPlayer player, String addonId, CompoundTag data) {
-        AddonCustomDataStorage.writeAddonRoot(player, addonId, data);
+        AddonCustomDataAccess.writeAddonRoot(player, addonId, data);
     }
 
     /**
-     * 台座上の特定アイテムに対して描画用ItemStackの変換処理を登録する
-     *
-     * @param item 対象アイテム
-     * @param transformer 元のItemStackを受け取り、描画用ItemStackを返す処理
+     * Deprecated Use {@link TokorotenSlimeClientAPI#getKeyMappingCategory()} instead.
      */
-    @Environment(EnvType.CLIENT)
+    @Deprecated(since = "1.2.0")
+    public static KeyMapping.Category getKeyMappingCategory() {
+        return ModKeyMappings.TOKOROTENSLIME_CATEGORY;
+    }
+
+    /**
+     * Deprecated Use {@link TokorotenSlimeClientAPI#registerPedestalTransformer(Item, UnaryOperator)} instead.
+     */
+    @Deprecated(since = "1.2.0")
     public static void registerPedestalRenderHandler(Item item, UnaryOperator<ItemStack> transformer) {
         PedestalRenderRegistry.register(item, transformer);
     }

@@ -2,11 +2,9 @@ package net.kasara.tokorotenslime.client.render.block.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasara.tokorotenslime.block.entity.PedestalBlockEntity;
 import net.kasara.tokorotenslime.client.render.block.entity.state.PedestalRenderState;
-import net.kasara.tokorotenslime.client.internal.PedestalRenderRegistry;
+import net.kasara.tokorotenslime.client.render.block.entity.internal.PedestalRenderRegistry;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -21,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * PedestalBlockEntity上に置かれたアイテムの描画をする
  */
-@Environment(EnvType.CLIENT)
 public class PedestalBlockEntityRenderer implements BlockEntityRenderer<PedestalBlockEntity, PedestalRenderState> {
 
     private final ItemModelResolver itemModelResolver;
