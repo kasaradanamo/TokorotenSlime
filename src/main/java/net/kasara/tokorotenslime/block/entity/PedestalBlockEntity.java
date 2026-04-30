@@ -29,7 +29,7 @@ public class PedestalBlockEntity extends BlockEntity implements Container {
     private float rotation = 0;
 
     public PedestalBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.PEDESTAL_BE, pos, state);
+        super(ModBlockEntities.PEDESTAL_BE.get(), pos, state);
     }
 
     /**

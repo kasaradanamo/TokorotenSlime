@@ -1,23 +1,23 @@
 package net.kasara.tokorotenslime.block;
 
 import net.kasara.tokorotenslime.TokorotenSlime;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
+import net.kasara.tokorotenslime.item.ModItems;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Function;
 
 public class ModBlocks {
 
+    public static final DeferredRegister.Blocks BLOCKS =
+            DeferredRegister.createBlocks(TokorotenSlime.MOD_ID);
+
     // PedestalBlockのインスタンス。設置アイテム用の台座ブロック
-    public static final Block PEDESTAL =
+    public static final DeferredBlock<Block> PEDESTAL =
             registerBlock("pedestal", props -> new PedestalBlock(props
                     .mapColor(MapColor.STONE)                       // 地図に表示される色
                     .strength(2f, 6.0f)    // ブロック耐久力・爆発耐性
@@ -26,28 +26,25 @@ public class ModBlocks {
                     .requiresCorrectToolForDrops()                  // 適切なツールでないと破壊できない
     ));
 
-    private static Block registerBlock(String name, Function<Block.Properties, Block> factory) {
-        ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(TokorotenSlime.MOD_ID, name));
-        Block block = factory.apply(Block.Properties.of().setId(key));
+    private static DeferredBlock<Block> registerBlock(String name, Function<Block.Properties, Block> factory) {
+        DeferredBlock<Block> block = BLOCKS.registerBlock(name, factory);
         // BlockItemを登録
-        registerBlockItem(key, block);
+        registerBlockItem(name, block);
         // ブロック本体をレジストリに登録
-        return Registry.register(BuiltInRegistries.BLOCK, key, block);
+        return block;
     }
 
-    private static void registerBlockItem(ResourceKey<Block> blockKey, Block block) {
-        ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, blockKey.identifier());
-        Registry.register(
-                BuiltInRegistries.ITEM,
-                itemKey,
-                new BlockItem(block, new Item.Properties().setId(itemKey).useBlockDescriptionPrefix())
-        );
+    private static void registerBlockItem(String name, DeferredBlock<Block> block) {
+        ModItems.ITEMS.registerSimpleBlockItem(name, block);
     }
 
     /**
      * ModBlocksの登録処理を呼び出す
      */
-    public static void register() {
+    public static void register(IEventBus modEventBus) {
+        BLOCKS.register(modEventBus);
+
+        // ログ出力
         TokorotenSlime.LOGGER.info("Registering Mod Blocks for " + TokorotenSlime.MOD_ID);
     }
 }
