@@ -1,30 +1,40 @@
 package net.kasara.tokorotenslime;
 
-import net.fabricmc.api.ModInitializer;
+import com.mojang.logging.LogUtils;
 import net.kasara.tokorotenslime.block.ModBlocks;
 import net.kasara.tokorotenslime.block.entity.ModBlockEntities;
 import net.kasara.tokorotenslime.item.ModCreativeModeTabs;
 import net.kasara.tokorotenslime.item.ModItems;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class TokorotenSlime implements ModInitializer {
+@Mod(TokorotenSlime.MOD_ID)
+public class TokorotenSlime {
 
     public static final String MOD_ID = "tokorotenslime";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final Logger LOGGER = LogUtils.getLogger();
 
-    @Override
-    public void onInitialize() {
+    public TokorotenSlime(IEventBus modEventBus) {
         // アイテム登録
-        ModItems.register();
+        ModItems.register(modEventBus);
 
         // ブロック登録
-        ModBlocks.register();
+        ModBlocks.register(modEventBus);
 
         // 台座ブロックエンティティ登録
-        ModBlockEntities.register();
+        ModBlockEntities.register(modEventBus);
 
         // クリエイティブタブ登録
-        ModCreativeModeTabs.register();
+        ModCreativeModeTabs.register(modEventBus);
+
+        // クリエイティブタブにアイテムを登録
+        modEventBus.addListener(this::addCreativeModeTab);
+    }
+
+    private void addCreativeModeTab(BuildCreativeModeTabContentsEvent event) {
+        // アドオンのアイテムをクリエイティブタブに追加
+        ModCreativeModeTabs.addAddonItems(event);
     }
 }

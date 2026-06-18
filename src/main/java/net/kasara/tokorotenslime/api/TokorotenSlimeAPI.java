@@ -1,18 +1,13 @@
 package net.kasara.tokorotenslime.api;
 
 import net.kasara.tokorotenslime.TokorotenSlime;
-import net.kasara.tokorotenslime.client.option.ModKeyMappings;
-import net.kasara.tokorotenslime.client.render.block.entity.internal.PedestalRenderRegistry;
 import net.kasara.tokorotenslime.item.ModCreativeModeTabs;
 import net.kasara.tokorotenslime.component.player.AddonCustomDataAccess;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.function.UnaryOperator;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 /**
  * Tokorotenslimeの外部向けAPI
@@ -30,7 +25,7 @@ public final class TokorotenSlimeAPI {
      * 指定したアイテムをTokorotenslimeのクリエイティブタブに追加
      * @param item 追加するItem
      */
-    public static void addItemToTab(Item item) {
+    public static void addItemToTab(DeferredItem<Item> item) {
         ModCreativeModeTabs.addItemList(item);
     }
 
@@ -54,22 +49,6 @@ public final class TokorotenSlimeAPI {
      */
     public static void writeAddonData(ServerPlayer player, String addonId, CompoundTag data) {
         AddonCustomDataAccess.writeAddonRoot(player, addonId, data);
-    }
-
-    /**
-     * Deprecated Use {@link TokorotenSlimeClientAPI#getKeyMappingCategory()} instead.
-     */
-    @Deprecated(since = "1.2.0")
-    public static KeyMapping.Category getKeyMappingCategory() {
-        return ModKeyMappings.TOKOROTENSLIME_CATEGORY;
-    }
-
-    /**
-     * Deprecated Use {@link TokorotenSlimeClientAPI#registerPedestalTransformer(Item, UnaryOperator)} instead.
-     */
-    @Deprecated(since = "1.2.0")
-    public static void registerPedestalRenderHandler(Item item, UnaryOperator<ItemStack> transformer) {
-        PedestalRenderRegistry.register(item, transformer);
     }
 
     private TokorotenSlimeAPI() {}
