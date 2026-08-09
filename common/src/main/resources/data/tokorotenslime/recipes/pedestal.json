@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    " X ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:polished_deepslate_slab"
+    },
+    "X": {
+      "item": "minecraft:polished_deepslate"
+    }
+  },
+  "result": {
+    "item": "tokorotenslime:pedestal",
+    "count": 1
+  }
+}

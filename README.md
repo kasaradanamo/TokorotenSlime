@@ -1,5 +1,5 @@
 # TokorotenSlime
-![current_features](https://cdn.modrinth.com/data/cached_images/164b742803c1b94fb9134c66b54213da7a2840c7.png)
+![tokorotenslime](https://cdn.modrinth.com/data/cached_images/164b742803c1b94fb9134c66b54213da7a2840c7.png)
 
 - **<a href="https://x.com/kasaradanamo" target="_blank">X(Twitter)</a>**<br>
 - **<a href="https://github.com/kasaradanamo/TokorotenSlime" target="_blank">GitHub</a>**<br>
@@ -18,8 +18,8 @@ Current features:
 
 ---
 
-![current_features](https://cdn.modrinth.com/data/cached_images/431c901c24df268f89d2ee5599161e18a9f23847.png)
-![current_features](https://cdn.modrinth.com/data/cached_images/a717286ade460ab6293cb1cbc6a03f48cf45bcc1.png)
+![better_fish_craft](https://cdn.modrinth.com/data/cached_images/431c901c24df268f89d2ee5599161e18a9f23847.png)
+![pedestal_craft](https://cdn.modrinth.com/data/cached_images/a717286ade460ab6293cb1cbc6a03f48cf45bcc1.png)
 
 ---
 
