@@ -1,0 +1,11 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+rootProject.ext.loadModProperties(project, 'TokorotenSlime')
+
+rootProject.ext.configureCommonModule(project)
+
+configurations.runtimeClasspath {
+    exclude group: 'net.minecraft'
+}

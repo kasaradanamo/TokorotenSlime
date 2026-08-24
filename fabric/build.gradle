@@ -1,0 +1,15 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id 'maven-publish'
+}
+
+rootProject.ext.loadModProperties(project, 'TokorotenSlime')
+
+dependencies {
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    implementation project(':TokorotenSlime:common')
+}
+
+rootProject.ext.configureFabricModule(project, ':TokorotenSlime:common')
