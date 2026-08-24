@@ -20,7 +20,6 @@ import java.util.function.Supplier;
 public class ModCreativeModeTabs {
 
     // アドオンから追加されるアイテムを一時的に保存するリスト
-    // Supplier<Item>で保持する(登録済みItemは() -> itemで包んで渡す)
     private static final List<Supplier<Item>> TS_TAB_ITEMS = new ArrayList<>();
 
     // TokorotenSlime用クリエイティブタブ

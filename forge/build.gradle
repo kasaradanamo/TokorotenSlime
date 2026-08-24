@@ -5,13 +5,11 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
-// このmod(TokorotenSlime)配下のcommon/forge/fabricで共有するプロパティ(mod_id等)を読み込む。
 rootProject.ext.loadModProperties(project, 'TokorotenSlime')
 
 rootProject.ext.configureForgeMinecraft(project) {
     "${mod_id}" {
         source sourceSets.main
-        // commonモジュールのソースも開発実行環境(runClient等)で読み込む
         source project(':TokorotenSlime:common').sourceSets.main
     }
 }
