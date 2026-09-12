@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev'
+}
+
+rootProject.ext.loadModProperties(project, 'TokorotenSlime')
+
+rootProject.ext.configureNeoForgeRuns(project, [
+        (mod_id): [project(':TokorotenSlime:tokorotenslime-common').sourceSets.main]
+])
+
+dependencies {
+    implementation(project(':TokorotenSlime:tokorotenslime-common')) { transitive = false }
+}
+
+rootProject.ext.configureNeoForgeModule(project, ':TokorotenSlime:tokorotenslime-common')

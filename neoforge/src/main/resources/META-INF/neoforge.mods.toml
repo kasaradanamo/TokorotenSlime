@@ -1,0 +1,32 @@
+modLoader="javafml"
+loaderVersion="${fml_version_range}"
+license="${mod_license}"
+issueTrackerURL="https://github.com/kasaradanamo/TokorotenSlime/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+#updateJSONURL="https://change.me.example.invalid/updates.json"
+displayURL="https://modrinth.com/mod/tokorotenslime"
+logoFile="icon.png"
+#credits=""
+authors="Kasara"
+description="A core mod adding a few items and blocks, serving as the foundation for addons."
+
+#[[mixins]]
+#config="${mod_id}.mixins.json"
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
