@@ -2,6 +2,7 @@ package net.kasara.tokorotenslime.fabric.item;
 
 import net.kasara.tokorotenslime.fabric.TokorotenSlime;
 import net.kasara.tokorotenslime.fabric.block.ModBlocks;
+import net.kasara.tokorotenslime.item.internal.CreativeTabBridge;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -11,17 +12,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
 /**
  * アイテムグループ(クリエイティブタブ)を管理するクラス
  */
 public class ModCreativeModeTabs {
-
-    // アドオンから追加されるアイテムを一時的に保存するリスト
-    private static final List<Supplier<Item>> TS_TAB_ITEMS = new ArrayList<>();
 
     // TokorotenSlime用クリエイティブタブ
     public static final CreativeModeTab TOKOROTENSLIME_TAB =
@@ -39,7 +33,7 @@ public class ModCreativeModeTabs {
                                 output.accept(ModBlocks.PEDESTAL);
 
                                 // アドオン追加分
-                                TS_TAB_ITEMS.forEach(item -> output.accept(item.get()));
+                                CreativeTabBridge.getItems().forEach(item -> output.accept(item.get()));
                             })
                             .build()
     );
@@ -49,12 +43,5 @@ public class ModCreativeModeTabs {
      */
     public static void register() {
         TokorotenSlime.LOGGER.info(("Registering Mod Creative Mode Tab for " + TokorotenSlime.MOD_ID));
-    }
-
-    /**
-     * APIから呼ばれれるメソッド
-     */
-    public static void addItemList(Supplier<Item> item) {
-        TS_TAB_ITEMS.add(item);
     }
 }

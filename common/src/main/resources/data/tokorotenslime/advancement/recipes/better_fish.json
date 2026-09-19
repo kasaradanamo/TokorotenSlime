@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tokorotenslime:better_fish"
+        "recipes": "tokorotenslime:better_fish"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -115,11 +115,6 @@ public class PedestalBlockEntity extends BlockEntity implements Container {
         return 1;
     }
 
-    @Override
-    public int getMaxStackSize(ItemStack itemStack) {
-        return 1;
-    }
-
     /**
      * Inventoryをクリアする
      */

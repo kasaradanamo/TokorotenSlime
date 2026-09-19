@@ -8,5 +8,5 @@ public class ModKeyMappings {
 
     // TokorotenSlime用のキーマッピングカテゴリ
     public static final KeyMapping.Category TOKOROTENSLIME_CATEGORY =
-            new KeyMapping.Category(Identifier.fromNamespaceAndPath(TokorotenSlimeCommon.MOD_ID, "main"));
+            KeyMapping.Category.register(Identifier.fromNamespaceAndPath(TokorotenSlimeCommon.MOD_ID, "main"));
 }

@@ -1,6 +1,5 @@
 package net.kasara.tokorotenslime.block;
 
-import com.mojang.serialization.MapCodec;
 import net.kasara.tokorotenslime.block.entity.PedestalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -20,15 +19,8 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class PedestalBlock extends BaseEntityBlock {
 
-    public static final MapCodec<PedestalBlock> CODEC = simpleCodec(PedestalBlock::new);
-
     public PedestalBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Override

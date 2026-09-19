@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tokorotenslime:pedestal"
+        "recipes": "tokorotenslime:pedestal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

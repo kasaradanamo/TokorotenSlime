@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tokorotenslime:cooked_ajifurai"
+        "recipes": "tokorotenslime:cooked_ajifurai"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
