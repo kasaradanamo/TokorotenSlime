@@ -4,7 +4,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.kasara.tokorotenslime.TokorotenSlimeCommon;
 import net.kasara.tokorotenslime.component.player.internal.AddonDataAccessBridge;
-import net.kasara.tokorotenslime.item.internal.CreativeTabBridge;
 import net.kasara.tokorotenslime.fabric.block.ModBlocks;
 import net.kasara.tokorotenslime.fabric.block.entity.ModBlockEntities;
 import net.kasara.tokorotenslime.fabric.component.player.AddonCustomDataAccess;
@@ -23,9 +22,6 @@ public class TokorotenSlime implements ModInitializer {
         // common APIのアドオンデータアクセスブリッジを注入
         AddonDataAccessBridge.GET_ADDON_DATA = AddonCustomDataAccess::getAddonRoot;
         AddonDataAccessBridge.WRITE_ADDON_DATA = AddonCustomDataAccess::writeAddonRoot;
-
-        // common APIのクリエイティブタブ追加ブリッジを注入
-        CreativeTabBridge.setHandler(ModCreativeModeTabs::addItemList);
 
         // アイテム登録
         ModItems.register();

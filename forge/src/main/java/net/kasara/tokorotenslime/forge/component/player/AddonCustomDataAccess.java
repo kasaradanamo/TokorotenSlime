@@ -13,7 +13,7 @@ public class AddonCustomDataAccess {
     public static CompoundTag getAddonRoot(Player player, String addonId) {
         CompoundTag persisted = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         CompoundTag tsRoot = persisted.getCompound(TokorotenSlimeCommon.MOD_ID);
-        return tsRoot.getCompound(addonId);
+        return tsRoot.getCompound(addonId).copy();
     }
 
     public static void writeAddonRoot(ServerPlayer player, String addonId, CompoundTag addonRoot) {

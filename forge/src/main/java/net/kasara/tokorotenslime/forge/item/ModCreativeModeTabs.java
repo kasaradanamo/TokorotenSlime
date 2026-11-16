@@ -1,5 +1,6 @@
 package net.kasara.tokorotenslime.forge.item;
 
+import net.kasara.tokorotenslime.item.internal.CreativeTabBridge;
 import net.kasara.tokorotenslime.forge.TokorotenSlime;
 import net.kasara.tokorotenslime.forge.block.ModBlocks;
 import net.minecraft.core.registries.Registries;
@@ -11,8 +12,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -22,9 +21,6 @@ public class ModCreativeModeTabs {
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TokorotenSlime.MOD_ID);
-
-    // アドオンから追加されるアイテムを一時的に保存するリスト
-    private static final List<Supplier<Item>> TS_TAB_ITEMS = new ArrayList<>();
 
     // TokorotenSlime用クリエイティブタブ
     public static final RegistryObject<CreativeModeTab> TOKOROTENSLIME_TAB =
@@ -54,18 +50,11 @@ public class ModCreativeModeTabs {
     }
 
     /**
-     * APIから呼ばれるメソッド
-     */
-    public static void addItemList(Supplier<Item> item) {
-        TS_TAB_ITEMS.add(item);
-    }
-
-    /**
      * アドオン側がAPI経由で追加したアイテムをクリエイティブタブに追加
      */
     public static void addAddonItems(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey().equals(TOKOROTENSLIME_TAB.getKey())) {
-            for (Supplier<Item> item : TS_TAB_ITEMS) {
+            for (Supplier<Item> item : CreativeTabBridge.getItems()) {
                 event.accept(item.get());
             }
         }

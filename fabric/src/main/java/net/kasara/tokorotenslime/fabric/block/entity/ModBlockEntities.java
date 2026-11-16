@@ -22,6 +22,11 @@ public class ModBlockEntities {
                     ModBlocks.PEDESTAL
             );
 
+    static {
+        // commonから参照できるようブリッジへ反映する
+        ModBlockEntitiesCommon.PEDESTAL_BE = PEDESTAL_BE;
+    }
+
     private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntities(String name, FabricBlockEntityTypeBuilder.Factory<T> factory, Block... blocks) {
         return Registry.register(
                 BuiltInRegistries.BLOCK_ENTITY_TYPE,
@@ -34,9 +39,6 @@ public class ModBlockEntities {
      * ModBlockEntitiesの登録処理を呼び出す
      */
     public static void register() {
-        // 登録は同期的に完了するため、common側の共有ホルダーへ即座に反映できる
-        ModBlockEntitiesCommon.PEDESTAL_BE = PEDESTAL_BE;
-
         TokorotenSlime.LOGGER.info("Registering Mod Block Entities for " + TokorotenSlime.MOD_ID);
     }
 }

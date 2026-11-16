@@ -3,7 +3,6 @@ package net.kasara.tokorotenslime.forge;
 import net.kasara.tokorotenslime.TokorotenSlimeCommon;
 import net.kasara.tokorotenslime.component.player.internal.AddonDataAccessBridge;
 import net.kasara.tokorotenslime.block.entity.ModBlockEntitiesCommon;
-import net.kasara.tokorotenslime.item.internal.CreativeTabBridge;
 import net.kasara.tokorotenslime.forge.block.ModBlocks;
 import net.kasara.tokorotenslime.forge.block.entity.ModBlockEntities;
 import net.kasara.tokorotenslime.forge.component.player.AddonCustomDataAccess;
@@ -28,9 +27,6 @@ public class TokorotenSlime {
         // common APIのアドオンデータアクセスブリッジを注入
         AddonDataAccessBridge.GET_ADDON_DATA = AddonCustomDataAccess::getAddonRoot;
         AddonDataAccessBridge.WRITE_ADDON_DATA = AddonCustomDataAccess::writeAddonRoot;
-
-        // common APIのクリエイティブタブ追加ブリッジを注入
-        CreativeTabBridge.setHandler(ModCreativeModeTabs::addItemList);
 
         // アイテム登録
         ModItems.register(modEventBus);
