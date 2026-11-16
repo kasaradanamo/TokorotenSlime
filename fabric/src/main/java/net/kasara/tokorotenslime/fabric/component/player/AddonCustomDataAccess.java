@@ -29,7 +29,7 @@ public class AddonCustomDataAccess {
      * @return アドオン用NbtCompound(存在しない場合は空)
      */
     public static CompoundTag getAddonRoot(Player player, String addonId) {
-        return player.getAttachedOrCreate(ADDON_DATA).getCompound(addonId);
+        return player.getAttachedOrCreate(ADDON_DATA).getCompound(addonId).copy();
     }
 
     /**

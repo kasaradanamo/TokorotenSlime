@@ -8,7 +8,6 @@ import net.kasara.tokorotenslime.fabric.block.entity.ModBlockEntities;
 import net.kasara.tokorotenslime.fabric.component.player.AddonCustomDataAccess;
 import net.kasara.tokorotenslime.fabric.item.ModCreativeModeTabs;
 import net.kasara.tokorotenslime.fabric.item.ModItems;
-import net.kasara.tokorotenslime.item.internal.CreativeTabBridge;
 import org.slf4j.Logger;
 
 public class TokorotenSlime implements ModInitializer {
@@ -32,9 +31,6 @@ public class TokorotenSlime implements ModInitializer {
 
         // アドオン用データアタッチメント登録
         AddonCustomDataAccess.register();
-
-        // common APIのクリエイティブタブ追加ブリッジを注入
-        CreativeTabBridge.setHandler(ModCreativeModeTabs::addItemList);
 
         // common APIのアドオンデータアクセスブリッジを注入
         AddonDataAccessBridge.GET_ADDON_DATA = AddonCustomDataAccess::getAddonRoot;
