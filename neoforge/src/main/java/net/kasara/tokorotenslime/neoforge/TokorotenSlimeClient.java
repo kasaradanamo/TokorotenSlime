@@ -4,12 +4,10 @@ import net.kasara.tokorotenslime.client.render.block.entity.PedestalBlockEntityR
 import net.kasara.tokorotenslime.neoforge.block.entity.ModBlockEntities;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 @Mod(value = TokorotenSlime.MOD_ID, dist = Dist.CLIENT)
-@EventBusSubscriber(modid = TokorotenSlime.MOD_ID, value = Dist.CLIENT)
 public class TokorotenSlimeClient {
 
     public TokorotenSlimeClient(IEventBus modEventBus) {

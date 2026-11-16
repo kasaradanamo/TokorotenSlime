@@ -2,7 +2,6 @@ package net.kasara.tokorotenslime.neoforge;
 
 import net.kasara.tokorotenslime.TokorotenSlimeCommon;
 import net.kasara.tokorotenslime.block.entity.ModBlockEntitiesCommon;
-import net.kasara.tokorotenslime.item.internal.CreativeTabBridge;
 import net.kasara.tokorotenslime.neoforge.block.ModBlocks;
 import net.kasara.tokorotenslime.neoforge.block.entity.ModBlockEntities;
 import net.kasara.tokorotenslime.neoforge.item.ModCreativeModeTabs;
@@ -37,13 +36,9 @@ public class TokorotenSlime {
 
         // クリエイティブタブにアイテムを登録
         modEventBus.addListener(this::addCreativeModeTab);
-
-        // common APIのクリエイティブタブ追加ブリッジを注入
-        CreativeTabBridge.setHandler(ModCreativeModeTabs::addItemList);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        // DeferredHolderは登録イベント発火後でないと解決できないためここで代入する
         ModBlockEntitiesCommon.PEDESTAL_BE = ModBlockEntities.PEDESTAL_BE.get();
     }
 
