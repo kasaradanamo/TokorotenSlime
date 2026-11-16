@@ -43,13 +43,12 @@ public class PedestalBlockEntityRenderer implements BlockEntityRenderer<Pedestal
         state.stack = PedestalRenderRegistry.apply(blockEntity.getItem(0));
 
         state.rotation = blockEntity.getRenderingRotation(partialTicks);
-        state.level = blockEntity.getLevel();
 
         itemModelResolver.updateForTopItem(
                 state.renderState,
                 state.stack,
                 ItemDisplayContext.GUI,
-                state.level,
+                blockEntity.getLevel(),
                 null,
                 (int) blockEntity.getBlockPos().asLong()
         );
