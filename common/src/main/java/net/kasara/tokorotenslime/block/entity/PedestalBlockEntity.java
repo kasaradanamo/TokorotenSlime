@@ -176,7 +176,7 @@ public class PedestalBlockEntity extends BlockEntity implements Container {
      */
     public float getRenderingRotation(float partialTick) {
         long gameTime = this.level != null ? this.level.getGameTime() : 0L;
-        float ticks = gameTime + partialTick;
-        return (ticks * DEGREES_PER_TICK) % 360f;
+        double ticks = gameTime + (double) partialTick;
+        return (float) ((ticks * DEGREES_PER_TICK) % 360.0);
     }
 }
